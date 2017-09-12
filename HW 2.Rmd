@@ -6,45 +6,52 @@ output: pdf_document
 ---
 
 
-#1. Assume the Bayesian model with likelihood Y | Î¸ â¼ Binomial(n, Î¸) and prior Î¸ â¼ Beta(a, b). Write a function that uses Monte Carlo sampling to estimate the posterior mean and standard deviation of Î¸ given we observe Y = y. The function should take inputs y, n, a, and b. Given these inputs, the function should generate 1, 000, 000 samples of (Î¸, Y ) (by first drawing Î¸ from a beta distribution and then Y | Î¸ from a binomial distribution), extract the samples with Y = y, and return the mean and standard deviation of Î¸ for these samples. Include code for this function in your write-up.
+#1. Assume the Bayesian model with likelihood $Y | \theta ~ Binomial(n, \theta)$ and prior $\theta ~ Beta(a,b)$. Write a function that uses Monte Carlo sampling to estimate the posterior mean and standard deviation of $\theta$¸ given we observe $Y = y$. The function should take inputs $y, n, a, and b$. Given these inputs, the function should generate 1, 000, 000 samples of $(\theta, Y )$ (by first drawing $\theta$ from a beta distribution and then $Y | \theta$ from a binomial distribution), extract the samples with $Y = y$, and return the mean and standard deviation of $\theta$ for these samples. Include code for this function in your write-up.
 
 ```{r}
 question <- function(y, n, a, b){
-  post<-matrix(0,nrow=1000000,ncol=length(y))
+  theta<-rbeta(1e+06,a,b)
+  like<-rbinom(1e+06,n,theta)
+  post<-rbeta(1e+06, like+a, n-like+b) #posterior probability distribution
+  post<-cbind(post,like)
+  dat<-list()
+  dat2<-matrix(ncol=3,nrow=length(y))
   for(i in 1:length(y)){
-    post[,i]<-rbeta(1000000,y[i]+a,n-y[i]+b)
+    dat[[i]]<-post[,1][post[,2]==(i-1)]
+    dat2[i,1]<-mean(dat[[i]])
+    dat2[i,2]<-sd(dat[[i]])
+    dat2[i,3]<-y[i]
   }
-  #post<-rbeta(1000000, y+a, n-y+b) #posterior probability distribution
-  avg<-apply(post,2,mean) #posterior mean
-  stdev<-apply(post,2,sd) #posterior standard deviation
-  return(as.data.frame(cbind(avg,stdev,y)))
+  dat2<-as.data.frame(dat2)
+  colnames(dat2)<-c("mean", "Standard Deviation", "y")
+  return(dat2)
 }
 
 ```
 
-#2. Use the code from (1) with n = 10 and a = b = 1 to compute the posterior mean and standard deviation for Î¸ for all y = 0, 1, . . . , n and plot the posterior mean and standard deviation as a function of y.
+# 2. Use the code from (1) with $n = 10$ and $a = b = 1$ to compute the posterior mean and standard deviation for $\theta$, for all $y = 0, 1, . . . , n$ and plot the posterior mean and standard deviation as a function of $y$.
 
 
 ```{r }
-library(reshape2)
+
 library(ggplot2)
 set.seed(1)
 p2<-question(0:10, 10, 1, 1)
-p2<-melt(p2,id.vars = "y")
-plot(p2$y[p2$variable=="avg"],p2$value[p2$variable=="avg"])
-plot(p2$y[p2$variable=="stdev"],p2$value[p2$variable=="stdev"])
+
+ggplot(p2, aes(y, mean))+geom_point()
+ggplot(p2, aes(y, `Standard Deviation`))+geom_point()
+
 ```
 
-#3. Use the code from (1) with n = 10 and a = b = 10 to compute the posterior mean and standarddeviation for Î¸ for all y = 0, 1, . . . , n and plot the posterior mean and standard deviation as a function of y.
+#3. Use the code from (1) with $n = 10$ and $a = b = 10$ to compute the posterior mean and standarddeviation for $\theta$ for all $y = 0, 1, . . . , n$ and plot the posterior mean and standard deviation as a function of $y$.
 
 
 ```{r }
 set.seed(1)
 p3<-question(0:10, 10, 10, 10)
-p3<-melt(p3,id.vars = "y")
-plot(p3$y[p3$variable=="avg"],p3$value[p3$variable=="avg"])
-plot(p3$y[p3$variable=="stdev"],p3$value[p3$variable=="stdev"])
+ggplot(p3, aes(y, mean))+geom_point()
+ggplot(p3, aes(y, `Standard Deviation`))+geom_point()
 ```
 
-# 4. Comment on the differences between the plots with a = b = 1 versus a = b = 10.
+# 4. Comment on the differences between the plots with $a = b = 1$ versus $a = b = 10$.
 
