@@ -1,0 +1,43 @@
+---
+title: "HW 2"
+author: "Nicholas Marey"
+date: "September 12, 2017"
+output: pdf_document
+---
+
+
+#1. Assume the Bayesian model with likelihood Y | Î¸ â¼ Binomial(n, Î¸) and prior Î¸ â¼ Beta(a, b). Write a function that uses Monte Carlo sampling to estimate the posterior mean and standard deviation of Î¸ given we observe Y = y. The function should take inputs y, n, a, and b. Given these inputs, the function should generate 1, 000, 000 samples of (Î¸, Y ) (by first drawing Î¸ from a beta distribution and then Y | Î¸ from a binomial distribution), extract the samples with Y = y, and return the mean and standard deviation of Î¸ for these samples. Include code for this function in your write-up.
+
+```{r}
+question <- function(y, n, a, b){
+  post<-matrix(0,nrow=1000000,ncol=length(y))
+  for(i in y){
+    post[,i]<-rbeta(1000000,y[i]+a,n-y[i]+b)
+  }
+  #post<-rbeta(1000000, y+a, n-y+b) #posterior probability distribution
+  mean(post) #posterior mean
+  sd(post) #posterior standard deviation
+}
+
+
+```
+
+#2. Use the code from (1) with n = 10 and a = b = 1 to compute the posterior mean and standard deviation for Î¸ for all y = 0, 1, . . . , n and plot the posterior mean and standard deviation as a function of y.
+
+
+```{r }
+set.seed(1)
+p2<-question(y, 10, 1, 1)
+
+```
+
+#3. Use the code from (1) with n = 10 and a = b = 10 to compute the posterior mean and standarddeviation for Î¸ for all y = 0, 1, . . . , n and plot the posterior mean and standard deviation as a function of y.
+
+
+```{r }
+set.seed(1)
+p3<-question(0:10, 10, 10, 10)
+```
+
+# 4. Comment on the differences between the plots with a = b = 1 versus a = b = 10.
+
