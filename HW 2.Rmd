@@ -11,14 +11,14 @@ output: pdf_document
 ```{r}
 question <- function(y, n, a, b){
   post<-matrix(0,nrow=1000000,ncol=length(y))
-  for(i in y){
+  for(i in 1:length(y)){
     post[,i]<-rbeta(1000000,y[i]+a,n-y[i]+b)
   }
   #post<-rbeta(1000000, y+a, n-y+b) #posterior probability distribution
-  mean(post) #posterior mean
-  sd(post) #posterior standard deviation
+  avg<-apply(post,2,mean) #posterior mean
+  stdev<-apply(post,2,sd) #posterior standard deviation
+  return(as.data.frame(cbind(avg,stdev,y)))
 }
-
 
 ```
 
@@ -26,9 +26,13 @@ question <- function(y, n, a, b){
 
 
 ```{r }
+library(reshape2)
+library(ggplot2)
 set.seed(1)
-p2<-question(y, 10, 1, 1)
-
+p2<-question(0:10, 10, 1, 1)
+p2<-melt(p2,id.vars = "y")
+plot(p2$y[p2$variable=="avg"],p2$value[p2$variable=="avg"])
+plot(p2$y[p2$variable=="stdev"],p2$value[p2$variable=="stdev"])
 ```
 
 #3. Use the code from (1) with n = 10 and a = b = 10 to compute the posterior mean and standarddeviation for Î¸ for all y = 0, 1, . . . , n and plot the posterior mean and standard deviation as a function of y.
@@ -37,6 +41,9 @@ p2<-question(y, 10, 1, 1)
 ```{r }
 set.seed(1)
 p3<-question(0:10, 10, 10, 10)
+p3<-melt(p3,id.vars = "y")
+plot(p3$y[p3$variable=="avg"],p3$value[p3$variable=="avg"])
+plot(p3$y[p3$variable=="stdev"],p3$value[p3$variable=="stdev"])
 ```
 
 # 4. Comment on the differences between the plots with a = b = 1 versus a = b = 10.
