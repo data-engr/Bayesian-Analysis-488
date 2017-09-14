@@ -13,18 +13,15 @@ question <- function(y, n, a, b){
   theta<-rbeta(1e+06,a,b)
   like<-rbinom(1e+06,n,theta)
   post<-rbeta(1e+06, like+a, n-like+b) #posterior probability distribution
-  post<-cbind(post,like)
-  dat<-list()
-  dat2<-matrix(ncol=3,nrow=length(y))
-  for(i in 1:length(y)){
-    dat[[i]]<-post[,1][post[,2]==(i-1)]
-    dat2[i,1]<-mean(dat[[i]])
-    dat2[i,2]<-sd(dat[[i]])
-    dat2[i,3]<-y[i]
-  }
-  dat2<-as.data.frame(dat2)
-  colnames(dat2)<-c("mean", "Standard Deviation", "y")
-  return(dat2)
+  post<-as.data.frame(cbind(post,like))
+  avg<-as.data.frame(tapply(post$post,post$like,mean))
+  sd<-as.data.frame(tapply(post$post,post$like,sd))
+  values<-unique(post$like)
+  values<-values[order(values)]
+  dat<-cbind(values,avg,sd)
+  colnames(dat)<-c("k","mean","sd")
+  dat1<-dat[dat$k %in% y, ]
+  return(dat1)
 }
 
 ```
