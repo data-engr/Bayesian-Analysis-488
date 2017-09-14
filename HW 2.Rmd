@@ -21,6 +21,7 @@ question <- function(y, n, a, b){
   dat<-cbind(values,avg,sd)
   colnames(dat)<-c("k","mean","sd")
   dat1<-dat[dat$k %in% y, ]
+  colnames(dat1)<-c("y","Mean","Standard Deviation")
   return(dat1)
 }
 
@@ -32,12 +33,12 @@ question <- function(y, n, a, b){
 ```{r }
 
 library(ggplot2)
+library(gridExtra)
 set.seed(1)
 p2<-question(0:10, 10, 1, 1)
-
-ggplot(p2, aes(y, mean))+geom_point()
-ggplot(p2, aes(y, `Standard Deviation`))+geom_point()
-
+plot1<-ggplot(p2, aes(y, Mean))+geom_point()
+plot2<-ggplot(p2, aes(y, `Standard Deviation`))+geom_point()
+grid.arrange(plot1, plot2, ncol=2)
 ```
 
 #3. Use the code from (1) with $n = 10$ and $a = b = 10$ to compute the posterior mean and standarddeviation for $\theta$ for all $y = 0, 1, . . . , n$ and plot the posterior mean and standard deviation as a function of $y$.
@@ -46,8 +47,9 @@ ggplot(p2, aes(y, `Standard Deviation`))+geom_point()
 ```{r }
 set.seed(1)
 p3<-question(0:10, 10, 10, 10)
-ggplot(p3, aes(y, mean))+geom_point()
-ggplot(p3, aes(y, `Standard Deviation`))+geom_point()
+plot3<-ggplot(p3, aes(y, Mean))+geom_point()
+plot4<-ggplot(p3, aes(y, `Standard Deviation`))+geom_point()
+grid.arrange(plot3, plot4, ncol=2)
 ```
 
 # 4. Comment on the differences between the plots with $a = b = 1$ versus $a = b = 10$.
