@@ -64,6 +64,6 @@ grid.arrange(plot3, plot4, ncol=2)
 
 When both a and b equal 1, the mean of theta varies greatly as y increases from 0 to 10. This can be seen in question two, where the mean of theta when y equals 0 is approximately 0.08, while the mean of theta when y equals 10 is approximately 0.92. Meanwhile, when a and b both equal 10, the mean of theta starts to flatten. When this situation is present, the mean of theta only varies between approximately 0.33 and 0.67. 
 
-Additionally, when a and b both equal 1, the standard deviation also varies greatly, with theta ranging from 0.077 to 0.139. When a and b both equal 10, the range for the standard deviation of theta has shrunk to between 0.0831 and 0.897. 
+Additionally, when a and b both equal 1, the standard deviation also varies greatly, with theta ranging from 0.077 to 0.139. When a and b both equal 10, the range for the standard deviation of theta has shrunk to between 0.0831 and 0.0897. 
 
 This means that as a and b increased from 1 to 10, the distribution took a much tighter form. When both a and b equaled 1, the values of theta were wider resulting in a greater standard deviation as compared to when a and b both equaled 10. When a and b both were 10, the posterior distribution had a higher peak and the values of theta do not vary that much. This results in smaller standard deviations for theta. Furthermore, not only did the standard deviations of theta tighten up as a and b increased, but so did the means of theta. As a and b increased to 10, the means of theta became closer to 0.5. 
