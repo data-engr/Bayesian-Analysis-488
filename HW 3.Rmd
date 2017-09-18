@@ -1,0 +1,62 @@
+---
+title: "Homework 3 - Stat 488 Bayesian Analysis"
+author: "Nicholas Marey"
+date: "September 18, 2017"
+output: pdf_document
+---
+
+# Question 1
+**Here you will write an R function to perform a Bayesian analysis of count data. The response is the number of events $Y \in {0, 1, 2, . . . }$ that occurs in a time interval of $M > 0$ hours, and the unknown parameter is the mean count per hour, $\theta$. Assume the Bayesian model with likelihood $Y | \theta \sim Poisson(M\theta)$, prior $\theta \sim Gamma(a, b)$, and thus posterior $\theta |Y \sim Gamma(Y + a, M + b)$.**
+
+##Part a
+Write an R function that takes $Y , M, a$, and $b$ as inputs. The function should produce a plot (clearly labeled!) that overlays the prior and posterior density functions (both using the dgamma  function), and it should return a list with the posterior mean, posterior standard deviation, and a 95% credible interval.
+```{r}
+
+```
+
+##Part b
+What values of $a$ and $b$ would make good default values to represent a prior that carries little information about $\theta$? Make these the default values in your function.
+```{r}
+
+```
+
+##Part c
+What values of a and b give prior mean 1 and prior standard deviation 2?
+```{r}
+
+```
+
+##Part d
+Now we observe $Y = 20 events$ in $M = 10$ hours. Use your code from (a) to conduct a Bayesian analysis of these data. Perform the analysis twice, once with the uninformative prior from (b) and once with the informative prior in (c).
+```{r}
+
+```
+
+##Part e
+Summarize the results. In particular, how does this analysis compare to a frequentist analysis and how much are the results affected by the prior?
+
+
+#Question 2
+A steel plant relies on a machine that produces devices guaranteed to be defecting with probability less than 0.10. You are in change of quality control. To ensure that the machine is working properly you take 100 samples each day (independent across sample and day) and record the number of samples that are defective. The data for a recent 10-day stretch are given below:
+```{r echo=FALSE}
+tabl<-"
+|Days    |1 |2 |3 |4 |5 |6 |7 |8 |9 |10|
+|--------|--|--|--|--|--|--|--|--|--|--|
+|Samples |12|11|9 |15|18|15|11|8 |12|16|
+"
+cat(tabl)
+```
+
+
+##Part a
+Assuming the true defect probability is constant, plot the posterior probability that the defect probability is greater than 0.1 as a function of the day. For day t, use the samples from day 1 through day t in this calculation.
+```{r}
+
+```
+
+
+##Part b
+When, if ever, would you sound the alarm and claim that the machine is out of order?
+
+
+
