@@ -11,13 +11,63 @@ output: pdf_document
 ##Part a
 Write an R function that takes $Y , M, a$, and $b$ as inputs. The function should produce a plot (clearly labeled!) that overlays the prior and posterior density functions (both using the dgamma  function), and it should return a list with the posterior mean, posterior standard deviation, and a 95% credible interval.
 ```{r}
+pg.posterior<-function(Y,M,a,b){
+  
+  
+grid   <- seq(.01, 2, .01)
 
+like   <- dpois(Y,M*grid)
+like   <- like/sum(like) #standardize
+
+prior  <- dgamma(grid,a,b)
+prior  <- prior/sum(prior) #standardize
+
+post   <- like*prior
+post   <- post/sum(post)
+
+plot(grid, like, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
+lines(grid, prior, col = "orange")
+lines(grid, post, lwd = 2, col = "red")
+
+legend("topright", c("Likelihood", "Prior", "Posterior"), lwd = c(1,1,2), col = c("blue","orange","red"))
+  
+  
+  CI<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
+  CI
+  (Y+a)/(N+b)     #Posterior mean
+  sqrt(Y+a)/(N+b)      #Posterior sd
+}
 ```
 
 ##Part b
 What values of $a$ and $b$ would make good default values to represent a prior that carries little information about $\theta$? Make these the default values in your function.
 ```{r}
+pg.posterior<-function(Y,M,a=1,b=1){
+  
+  
+grid   <- seq(.01, 2, .01)
 
+like   <- dpois(Y,M*grid)
+like   <- like/sum(like) #standardize
+
+prior  <- dgamma(grid,a,b)
+prior  <- prior/sum(prior) #standardize
+
+post   <- like*prior
+post   <- post/sum(post)
+
+plot(grid, like, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
+lines(grid, prior, col = "orange")
+lines(grid, post, lwd = 2, col = "red")
+
+legend("topright", c("Likelihood", "Prior", "Posterior"), lwd = c(1,1,2), col = c("blue","orange","red"))
+  
+  
+  CI<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
+  CI
+  (Y+a)/(N+b)     #Posterior mean
+  sqrt(Y+a)/(N+b)      #Posterior sd
+}
 ```
 
 ##Part c
@@ -25,6 +75,9 @@ What values of a and b give prior mean 1 and prior standard deviation 2?
 ```{r}
 
 ```
+$\alpha = \beta$, for a prior mean of 1.
+any values where $\frac{\sqrt{a}}{\beta}=2$ holds true will result in a prior standard deviation of 2. 
+
 
 ##Part d
 Now we observe $Y = 20 events$ in $M = 10$ hours. Use your code from (a) to conduct a Bayesian analysis of these data. Perform the analysis twice, once with the uninformative prior from (b) and once with the informative prior in (c).
