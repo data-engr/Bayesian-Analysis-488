@@ -14,7 +14,7 @@ Write an R function that takes $Y , M, a$, and $b$ as inputs. The function shoul
 pg.posterior<-function(Y,M,a,b){
   
   
-grid   <- seq(.01, 2, .01)
+grid   <- seq(.01, 3, .01)
 
 like   <- dpois(Y,M*grid)
 like   <- like/sum(like) #standardize
@@ -25,27 +25,28 @@ prior  <- prior/sum(prior) #standardize
 post   <- like*prior
 post   <- post/sum(post)
 
-plot(grid, like, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
-lines(grid, prior, col = "orange")
-lines(grid, post, lwd = 2, col = "red")
+plot(grid, prior, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
+lines(grid, post, col = "red", lty=3)
+legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"), lty=c(1,3))
+  
+post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
+post.mean<-(Y+a)/(M+b)     #Posterior mean
+post.sd<-sqrt(Y+a)/(M+b)      #Posterior sd
 
-legend("topright", c("Likelihood", "Prior", "Posterior"), lwd = c(1,1,2), col = c("blue","orange","red"))
-  
-  
-  CI<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
-  CI
-  (Y+a)/(N+b)     #Posterior mean
-  sqrt(Y+a)/(N+b)      #Posterior sd
+posterior<-data.frame(post.mean, post.sd, post.ci[1],post.ci[2])
+colnames(posterior)=c("mean", "Standard Deviation", "Lower CI", "Upper CI")
+return(posterior)
 }
 ```
 
 ##Part b
-What values of $a$ and $b$ would make good default values to represent a prior that carries little information about $\theta$? Make these the default values in your function.
+**What values of $a$ and $b$ would make good default values to represent a prior that carries little information about $\theta$? Make these the default values in your function.**
+0.01 for a and be were considered uninformitive gamma distributions. Choose small values of a and b to carry little information. 
 ```{r}
-pg.posterior<-function(Y,M,a=1,b=1){
+pg.posterior<-function(Y,M,a=0.01,b=0.01){
   
   
-grid   <- seq(.01, 2, .01)
+grid   <- seq(.01, 3, .01)
 
 like   <- dpois(Y,M*grid)
 like   <- like/sum(like) #standardize
@@ -56,33 +57,36 @@ prior  <- prior/sum(prior) #standardize
 post   <- like*prior
 post   <- post/sum(post)
 
-plot(grid, like, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
-lines(grid, prior, col = "orange")
-lines(grid, post, lwd = 2, col = "red")
+plot(grid, prior, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
+lines(grid, post, col = "red", lty=3)
+legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"), lty=c(1,3))
+  
+post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
+post.mean<-(Y+a)/(M+b)     #Posterior mean
+post.sd<-sqrt(Y+a)/(M+b)      #Posterior sd
 
-legend("topright", c("Likelihood", "Prior", "Posterior"), lwd = c(1,1,2), col = c("blue","orange","red"))
-  
-  
-  CI<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
-  CI
-  (Y+a)/(N+b)     #Posterior mean
-  sqrt(Y+a)/(N+b)      #Posterior sd
+posterior<-data.frame(post.mean, post.sd, post.ci[1],post.ci[2])
+colnames(posterior)=c("mean", "Standard Deviation", "Lower CI", "Upper CI")
+return(posterior)
 }
 ```
 
 ##Part c
 What values of a and b give prior mean 1 and prior standard deviation 2?
-```{r}
-
-```
-$\alpha = \beta$, for a prior mean of 1.
-any values where $\frac{\sqrt{a}}{\beta}=2$ holds true will result in a prior standard deviation of 2. 
+$$\frac{\alpha}{\beta}=mean=1$$
+$$\alpha=\beta$$
+$$\frac{\alpha}{\beta^2}=\sigma^2=4$$
+$$\frac{\alpha}{\alpha^2}=4$$
+$$\frac{1}{\alpha}=4$$
+$$\alpha=\frac{1}{4}=\beta$$
 
 
 ##Part d
 Now we observe $Y = 20 events$ in $M = 10$ hours. Use your code from (a) to conduct a Bayesian analysis of these data. Perform the analysis twice, once with the uninformative prior from (b) and once with the informative prior in (c).
 ```{r}
+pg.posterior(20,10)
 
+pg.posterior(20,10,0.25,0.25)
 ```
 
 ##Part e
@@ -91,18 +95,18 @@ Summarize the results. In particular, how does this analysis compare to a freque
 
 #Question 2
 A steel plant relies on a machine that produces devices guaranteed to be defecting with probability less than 0.10. You are in change of quality control. To ensure that the machine is working properly you take 100 samples each day (independent across sample and day) and record the number of samples that are defective. The data for a recent 10-day stretch are given below:
-```{r echo=FALSE}
-tabl<-"
+
+utilize beta binomial model
+
 |Days    |1 |2 |3 |4 |5 |6 |7 |8 |9 |10|
 |--------|--|--|--|--|--|--|--|--|--|--|
 |Samples |12|11|9 |15|18|15|11|8 |12|16|
-"
-cat(tabl)
-```
 
 
 ##Part a
 Assuming the true defect probability is constant, plot the posterior probability that the defect probability is greater than 0.1 as a function of the day. For day t, use the samples from day 1 through day t in this calculation.
+
+just count how many are greater than 0.1
 ```{r}
 
 ```
