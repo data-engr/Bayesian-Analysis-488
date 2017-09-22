@@ -31,7 +31,7 @@ legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"),
   
 post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Credible Interval
 post.mean<-(Y+a)/(M+b)     #Posterior mean
-post.sd<-sqrt(Y+a)/(M+b)      #Posterior sd
+post.sd<-sqrt((Y+a)/(M+b))      #Posterior sd
 
 posterior<-data.frame(post.mean, post.sd, post.ci[1],post.ci[2])
 colnames(posterior)=c("mean", "Standard Deviation", "Lower CI", "Upper CI")
@@ -65,7 +65,7 @@ legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"),
   
 post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Credible Interval
 post.mean<-(Y+a)/(M+b)     #Posterior mean
-post.sd<-sqrt(Y+a)/(M+b)      #Posterior sd
+post.sd<-sqrt((Y+a)/(M+b))      #Posterior sd
 
 posterior<-data.frame(post.mean, post.sd, post.ci[1],post.ci[2])
 colnames(posterior)=c("mean", "Standard Deviation", "Lower CI", "Upper CI")
@@ -74,7 +74,7 @@ return(posterior)
 ```
 
 ##Part c
-What values of a and b give prior mean 1 and prior standard deviation 2?
+**What values of a and b give prior mean 1 and prior standard deviation 2?**
 $$\frac{\alpha}{\beta}=mean=1$$
 $$\alpha=\beta$$
 $$\frac{\alpha}{\beta^2}=\sigma^2=4$$
@@ -84,7 +84,7 @@ $$\alpha=\beta=\frac{1}{4}$$
 
 
 ##Part d
-**Now we observe $Y = 20 events$ in $M = 10$ hours. Use your code from (a) to conduct a Bayesian analysis of these data. Perform the analysis twice, once with the uninformative prior from (b) and once with the informative prior in (c).**
+**Now we observe $Y = 20$ events in $M = 10$ hours. Use your code from (a) to conduct a Bayesian analysis of these data. Perform the analysis twice, once with the uninformative prior from (b) and once with the informative prior in (c).**
 ```{r tidy=TRUE}
 pg.posterior(20,10)
 
@@ -94,13 +94,22 @@ pg.posterior(20,10,0.25,0.25)
 ##Part e
 **Summarize the results. In particular, how does this analysis compare to a frequentist analysis and how much are the results affected by the prior?**
 
+| Model       | Mean | Standard Deviation | Lower 95% CI | Upper 95% CI |
+|-------------|------|--------------------|--------------|--------------|
+|Uninformative| 1.999| 1.414              |1.221         |2.965         |
+|Informed     |1.976 | 1.406              |1.211         |2.924         |
+|Frequentist  | 2    |    1.414           | 0            | 5            |
+
+The results obtain from the bayesian method are affected by the prior since they do not match what a frequentist would say. Assuming a poisson distribution and based on the observation with 2 events happening per hour, lambda would be equal to 2. This in turn would cause the mean to be equal to 2 and the standard deviation equal to 1.414. With the introduction of the prior, the mean and the standard deviation are both shifted towards the prior. With the uniformed prior the mean barely shifts toward the prior, by 0.001, and the standard deviation stays the same at 1.414. With the informed prior, there is a greater shift toward the prior, of 0.024, and the standard deviation shifts toward the prior as well by 0.008. 
+
+Overall, the results are not affected very greatly by the prior in this scenario. 
 
 
 
 #Question 2
-A steel plant relies on a machine that produces devices guaranteed to be defecting with probability less than 0.10. You are in change of quality control. To ensure that the machine is working properly you take 100 samples each day (independent across sample and day) and record the number of samples that are defective. The data for a recent 10-day stretch are given below:
+**A steel plant relies on a machine that produces devices guaranteed to be defecting with probability less than 0.10. You are in change of quality control. To ensure that the machine is working properly you take 100 samples each day (independent across sample and day) and record the number of samples that are defective. The data for a recent 10-day stretch are given below:**
 
-utilize beta binomial model
+
 
 |Days    |1 |2 |3 |4 |5 |6 |7 |8 |9 |10|
 |--------|--|--|--|--|--|--|--|--|--|--|
@@ -168,6 +177,9 @@ plot(dat2$days,dat2$prob, type = "l", xlab = "Days", ylab="P(theta > 0.10)", mai
 
 I would probably sound the alarm on the first day, with a probability of 0.714 that $\theta>0.1$ on a piece of equipment where this is never suppose to occur. 
 
-I would definitely say something by the fifth day because on the fifth day if $\theta=0.1$ I would expect to see 50 defects, however I have recorded 65 defects through this day. This amount is a full standard deviation away from the mean and would raise concerns that the true mean of $\theta$ is not 0.10. 
+Under the binomial distribution, with a probability of defect equal to 0.09 and 100 samples taken, I could expect to see 9 defects. With a standard deviation of approximately 3, then the number of defects I saw on day 1 would be equivalent to a 1 standard deviation move. 
+
+
+On day 5 I would have to claim the machine is out of order, because I should expect to see 45 cumulative defects with one standard deviation being 15, assuming the binomial distribution and a theta of 0.9. With 65 cumulative defects the machine has passed the expected number of defects by a number greater than 1 standard deviation. 
 
 
