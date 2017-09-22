@@ -9,8 +9,8 @@ output: pdf_document
 **Here you will write an R function to perform a Bayesian analysis of count data. The response is the number of events $Y \in {0, 1, 2, . . . }$ that occurs in a time interval of $M > 0$ hours, and the unknown parameter is the mean count per hour, $\theta$. Assume the Bayesian model with likelihood $Y | \theta \sim Poisson(M\theta)$, prior $\theta \sim Gamma(a, b)$, and thus posterior $\theta |Y \sim Gamma(Y + a, M + b)$.**
 
 ##Part a
-Write an R function that takes $Y , M, a$, and $b$ as inputs. The function should produce a plot (clearly labeled!) that overlays the prior and posterior density functions (both using the dgamma  function), and it should return a list with the posterior mean, posterior standard deviation, and a 95% credible interval.
-```{r}
+**Write an R function that takes $Y , M, a$, and $b$ as inputs. The function should produce a plot (clearly labeled!) that overlays the prior and posterior density functions (both using the dgamma  function), and it should return a list with the posterior mean, posterior standard deviation, and a 95% credible interval.**
+```{r tidy=TRUE}
 pg.posterior<-function(Y,M,a,b){
   
   
@@ -23,13 +23,13 @@ prior  <- dgamma(grid,a,b)
 prior  <- prior/sum(prior) #standardize
 
 post   <- like*prior
-post   <- post/sum(post)
+post   <- post/sum(post) #standardize
 
 plot(grid, prior, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
-lines(grid, post, col = "red", lty=3)
-legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"), lty=c(1,3))
+lines(grid, post, col = "red", lty=2, lwd=2)
+legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"), lty=c(1,2))
   
-post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
+post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Credible Interval
 post.mean<-(Y+a)/(M+b)     #Posterior mean
 post.sd<-sqrt(Y+a)/(M+b)      #Posterior sd
 
@@ -41,8 +41,10 @@ return(posterior)
 
 ##Part b
 **What values of $a$ and $b$ would make good default values to represent a prior that carries little information about $\theta$? Make these the default values in your function.**
-0.01 for a and be were considered uninformitive gamma distributions. Choose small values of a and b to carry little information. 
-```{r}
+
+
+0.01 for $a$ and $b$ will not affect the posterior distribution greatly so they were chosen as defaults values that will carry little information about $\theta$.  
+```{r tidy=TRUE}
 pg.posterior<-function(Y,M,a=0.01,b=0.01){
   
   
@@ -55,13 +57,13 @@ prior  <- dgamma(grid,a,b)
 prior  <- prior/sum(prior) #standardize
 
 post   <- like*prior
-post   <- post/sum(post)
+post   <- post/sum(post) #standardize
 
 plot(grid, prior, type = "l", xlab = "lambda", ylab = "Density", col = "blue")
-lines(grid, post, col = "red", lty=3)
-legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"), lty=c(1,3))
+lines(grid, post, col = "red", lty=2, lwd=2)
+legend("topright", c("Prior", "Posterior"), lwd = c(1,1), col = c("blue","red"), lty=c(1,2))
   
-post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Confidence Interval
+post.ci<-qgamma(c(0.025,0.975),Y+a,M+b) #Posterior 95% Credible Interval
 post.mean<-(Y+a)/(M+b)     #Posterior mean
 post.sd<-sqrt(Y+a)/(M+b)      #Posterior sd
 
@@ -78,19 +80,21 @@ $$\alpha=\beta$$
 $$\frac{\alpha}{\beta^2}=\sigma^2=4$$
 $$\frac{\alpha}{\alpha^2}=4$$
 $$\frac{1}{\alpha}=4$$
-$$\alpha=\frac{1}{4}=\beta$$
+$$\alpha=\beta=\frac{1}{4}$$
 
 
 ##Part d
-Now we observe $Y = 20 events$ in $M = 10$ hours. Use your code from (a) to conduct a Bayesian analysis of these data. Perform the analysis twice, once with the uninformative prior from (b) and once with the informative prior in (c).
-```{r}
+**Now we observe $Y = 20 events$ in $M = 10$ hours. Use your code from (a) to conduct a Bayesian analysis of these data. Perform the analysis twice, once with the uninformative prior from (b) and once with the informative prior in (c).**
+```{r tidy=TRUE}
 pg.posterior(20,10)
 
 pg.posterior(20,10,0.25,0.25)
 ```
 
 ##Part e
-Summarize the results. In particular, how does this analysis compare to a frequentist analysis and how much are the results affected by the prior?
+**Summarize the results. In particular, how does this analysis compare to a frequentist analysis and how much are the results affected by the prior?**
+
+
 
 
 #Question 2
@@ -104,16 +108,66 @@ utilize beta binomial model
 
 
 ##Part a
-Assuming the true defect probability is constant, plot the posterior probability that the defect probability is greater than 0.1 as a function of the day. For day t, use the samples from day 1 through day t in this calculation.
+**Assuming the true defect probability is constant, plot the posterior probability that the defect probability is greater than 0.1 as a function of the day. For day t, use the samples from day 1 through day t in this calculation.**
 
-just count how many are greater than 0.1
-```{r}
+Calculating $\alpha$ and $\beta$ for prior probability based on belief that mean of $\theta$ is 0.10 with variance of 0.05
+$$E[\theta]=\frac{\alpha}{\alpha+\beta}=0.1$$
+$$10\alpha=\alpha+\beta$$
+$$9\alpha=\beta$$
+$$V[\theta]=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}=0.05$$
+$$\frac{\alpha*9\alpha}{(\alpha+9\alpha)^2(\alpha+9\alpha+1)}=0.05$$
+$$\frac{9}{100*0.05}=10\alpha+1$$
+$$\frac{9}{5}-1=10\alpha$$
+$$\alpha=0.08$$
+$$9\alpha=\beta=0.08*9=0.72$$
+
+
+```{r tidy=TRUE}
+#Inputing data
+samples<-c(12,11,9,15,18,15,11,8,12,16)
+days<-1:10
+
+#priors
+a<-0.08
+b<-0.72
+
+#calculating number of samples through day t
+#calculating number of defects through day t
+cumulative.samples<-seq(100, 1000, 100)
+cumulative.defects<-rep(NA,10)
+
+for(i in 1:10){
+  if(i==1){cumulative.defects[i]=samples[i]}
+  else{
+    cumulative.defects[i]<-cumulative.defects[i-1]+samples[i]
+  }
+  
+}
+
+#Combining into a data frame
+dat<-data.frame(days, cumulative.defects, cumulative.samples)
+
+#Calculating probability theta > 0.10
+prob<-rep(NA, 10)
+
+for(i in 1:10){
+  prob[i]<-1-pbeta(0.1, cumulative.defects[i]+a,cumulative.samples[i]-cumulative.defects[i]+b)
+}
+
+#Combining into data frame
+dat2<-data.frame(prob,days)
+
+#Plotting results
+plot(dat2$days,dat2$prob, type = "l", xlab = "Days", ylab="P(theta > 0.10)", main="Is theta greater than 0.10?")
 
 ```
 
 
 ##Part b
-When, if ever, would you sound the alarm and claim that the machine is out of order?
+**When, if ever, would you sound the alarm and claim that the machine is out of order?**
 
+I would probably sound the alarm on the first day, with a probability of 0.714 that $\theta>0.1$ on a piece of equipment where this is never suppose to occur. 
+
+I would definitely say something by the fifth day because on the fifth day if $\theta=0.1$ I would expect to see 50 defects, however I have recorded 65 defects through this day. This amount is a full standard deviation away from the mean and would raise concerns that the true mean of $\theta$ is not 0.10. 
 
 
