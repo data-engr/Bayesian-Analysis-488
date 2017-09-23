@@ -175,11 +175,5 @@ plot(dat2$days,dat2$prob, type = "l", xlab = "Days", ylab="P(theta > 0.10)", mai
 ##Part b
 **When, if ever, would you sound the alarm and claim that the machine is out of order?**
 
-I would probably sound the alarm on the first day, with a probability of 0.714 that $\theta>0.1$ on a piece of equipment where this is never suppose to occur. 
-
-Under the binomial distribution, with a probability of defect equal to 0.09 and 100 samples taken, I could expect to see 9 defects. With a standard deviation of approximately 3, then the number of defects I saw on day 1 would be equivalent to a 1 standard deviation move. 
-
-
-On day 5 I would have to claim the machine is out of order, because I should expect to see 45 cumulative defects with one standard deviation being 15, assuming the binomial distribution and a theta of 0.9. With 65 cumulative defects the machine has passed the expected number of defects by a number greater than 1 standard deviation. 
-
-
+I would probably sound the alarm on the first day, with a probability of 0.714 that $\theta>0.1$ on a piece of equipment where this is never suppose to occur, I would find it odd. 
+By day 4, I would certainly sound the alarm. The probability that theta is greater than 0.10 through day 4 is 86.36%. This is large enough to conclude that the machine is out of order. Furthermore, the probability that theta is greater than 0.10 never goes down after day 4. Therefore by day 5 my suspicions have been confirmed when I notice the probability that theta is greater than 0.10 is 98.26% and I would have to call in the mechanic to take a look at the machine. 
