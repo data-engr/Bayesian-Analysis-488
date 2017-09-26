@@ -1,0 +1,36 @@
+---
+title: "Homework 4  - Stat 488 Bayesian Analysis"
+author: "Nicholas Marey"
+date: "September 26, 2017"
+output: pdf_document
+---
+#Question 1
+Say that $Y \sim Binomial(N, \theta)$, where $N \in \{0, 1, 2, . . .\}$ is the unknown parameter of interest and has prior $N \sim Poisson(1)$.
+
+## Part (a)
+Given $Y = 5$ and $\theta = 0.5$, plot the posterior distribution of $N$.
+```{r }
+func<-function(N,Y,theta){
+    choose(N,Y)*theta^N*(1/(exp(1)*factorial(Y)))
+}
+
+n<-5:100
+
+plot(n,func(n,5,0.5))
+```
+
+## Part (b)
+Given $Y = 5$ and $\theta = 0.1$, plot the posterior distribution of $N$.
+```{r}
+
+plot(n,func(n,5,0.1))
+```
+
+## Part (c)
+
+
+#Question 2
+```{r}
+
+```
+
