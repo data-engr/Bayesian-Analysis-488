@@ -9,55 +9,55 @@ output: pdf_document
 
 ## Part (a)
 **Given $Y = 5$ and $\theta = 0.5$, plot the posterior distribution of $N$.**
-```{r }
-func<-function(N,Y,theta){
-    choose(N,Y)*theta^N*(1-theta)^(N-Y)*(1/(exp(1)*factorial(Y)))
+```{r tidy=TRUE}
+func<-function(N,Y,theta,lambda){
+    choose(N,Y)*theta^N*(1-theta)^(N-Y)*((lambda^Y*exp(-lambda))/factorial(Y))
 }
 
-n<-5:100
+n<-5:20
 
-plot(n,func(n,5,0.5),ylab="f(N| Y, theta)",xlab="N", main="Posterior Distribution of N")
+plot(n,func(N=n,Y=5,theta=0.5,lambda=1),ylab="f(N| Y, theta)",xlab="N", main="Posterior Distribution of N")
 ```
 
 ## Part (b)
 **Given $Y = 5$ and $\theta = 0.1$, plot the posterior distribution of $N$.**
-```{r}
-
-plot(n,func(n,5,0.1),ylab="f(N| Y, theta)",xlab="N", main="Posterior Distribution of N")
+```{r tidy=TRUE}
+plot(n,func(N=n,Y=5,theta=0.1,lambda=1),ylab="f(N| Y, theta)",xlab="N", main="Posterior Distribution of N")
 ```
 
 ## Part (c)
-sitting on a street corner and count the number of bicycles per hour and count the other cars per hour that pass by. 
+We know the number of complete passes thrown by the Bears quarterback and want to determine the distribution of the total number of passes attempted. 
 
 #Question 2
 **A clinical trial was conducted to compare the effectiveness of three drugs. 100 patients were randomly assigned to each drug (300 total patients), and $Y_1 = 12$, $Y_2 = 18$, and $Y_3 = 10$ patients had successful outcomes in the three drug groups. Using uniform priors for the success probabilities of each drug:**
 
-Uniform prior with binomial likelihood?
-or does uniform mean beta(1,1)
 
 ##Part (a)
-**Likelihood**
+**Compute and plot the posterior distribution of the success probability for each drug.**
+
+*Likelihood*
 $$Y_1, Y_2, Y_3 | \theta  \sim Binomial(n,\theta)$$
 $$f(y_1, y_2, y_3 | \theta) = {{n}\choose{y_i}} (\theta)^{y_i}(1-\theta)^{n-y_i}$$
-**Prior Distribution**
+*Prior Distribution*
 $$\theta \sim Beta(a,b)$$
 $$f(\theta) = \frac{(a+b)}{(a)(b)}\theta^{a-1}(1-\theta)^{b-1}$$
 
-**Posterior Distribution**
+*Posterior Distribution*
 $$\theta | y \sim Beta(y+a, n-y+b)$$
 
 
 
 
-$$f(\theta) \sim Uniform(0,1)$$
-**Compute and plot the posterior distribution of the success probability for each drug.**
-What does dbeta do?
-what does it mean when it gives a value of 7?
-```{r}
-par(mfrow=c(1,1))
 
 
-plot(seq(0,1,length=100),dbeta(seq(0,1,length=100),12+1,100-12+1),type="l",col="red",ylim=c(0,14), ylab = "Density", xlab="N", main = "Drug Analysis")
+
+```{r tidy=TRUE}
+plot(seq(0,1,length=100),dbeta(seq(0,1,length=100),12+1,100-12+1),
+     type="l",col="red",
+     ylim=c(0,14), 
+     ylab = "Density", 
+     xlab="N", 
+     main = "Drug Analysis")
 lines(seq(0,1,length=100),dbeta(seq(0,1,length=100),18+1,100-18+1),col="blue")
 lines(seq(0,1,length=100),dbeta(seq(0,1,length=100),10+1,100-10+1),col="green")
 legend("topright", legend=c("=Y1","=Y2","=Y3"),lty=c(1,1,1),col=c("red","blue","green"))
@@ -66,18 +66,15 @@ legend("topright", legend=c("=Y1","=Y2","=Y3"),lty=c(1,1,1),col=c("red","blue","
 
 ##Part (b)
 **Compute the posterior probability that drug 2 is the best drug.**
-```{r}
+```{r tidy=TRUE}
 drug1<-rbeta(1e6,12+1,100-12+1)
 drug2<-rbeta(1e6,18+1,100-18+1)
 drug3<-rbeta(1e6,10+1,100-10+1)
 
-dat<-data.frame(drug1,drug2,drug3)
-dat$true<-0
-dat$true[dat$drug2>dat$drug1 | dat$drug2>dat$drug3]<-1 
-drug2.best<-sum(dat$true)/1e6
-drug2.best
-```
+mean(drug2 > drug1 | drug2>drug3)
 
+```
+The posterior probability that drug 2 is the best drug is 0.98725
 
 
 
