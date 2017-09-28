@@ -11,7 +11,7 @@ output: pdf_document
 **Given $Y = 5$ and $\theta = 0.5$, plot the posterior distribution of $N$.**
 ```{r tidy=TRUE}
 func<-function(N,Y,theta,lambda){
-    choose(N,Y)*theta^N*(1-theta)^(N-Y)*((lambda^Y*exp(-lambda))/factorial(Y))
+    choose(N,Y)*(theta^N)*((1-theta)^(N-Y))*(((lambda^Y)*(exp(-lambda)))/factorial(Y))
 }
 
 n<-5:20
@@ -73,10 +73,10 @@ drug1<-rbeta(1e6,12+1,100-12+1)
 drug2<-rbeta(1e6,18+1,100-18+1)
 drug3<-rbeta(1e6,10+1,100-10+1)
 
-mean(drug2 > drug1 | drug2>drug3)
+mean(drug2 > drug1 & drug2>drug3)
 
 ```
-The posterior probability that drug 2 is the best drug is 0.987229
+The posterior probability that drug 2 is the best drug is 0.847326
 
 
 
