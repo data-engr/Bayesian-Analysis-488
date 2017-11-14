@@ -1,0 +1,86 @@
+---
+title: "Bayesian HW 5"
+author: "Nicholas Marey"
+date: "November 14, 2017"
+output: pdf_document
+---
+
+Download the data. 
+
+```{r}
+load(url("http://math.luc.edu/~ebalderama/bayes_resources/data/Homes.RData"))
+ls()
+```
+
+
+Let $Y_i$ be the precipitation for observation $i$ and let $X_{ij}$ equal one if OTU $j$ present in sample $i$.
+
+
+```{r}
+Y <- homes[, "MeanAnnualPrecipitation"]
+X <- ifelse(OTU > 0, 1, 0)
+n <- nrow(X)
+dim(X)
+```
+
+Extract the 50 OTU with the largest absolute correlation between $X_{ij}$ and $Y_i$.
+
+```{r}
+p <- 50
+corr <- abs(cor(Y, X))
+index <- order(corr, decreasing = TRUE)[1:p]
+X <- X[,index]
+dim(X)
+```
+
+Now fit a Bayesian linear regression model in Stan with precipitation as the response against these 50 covariates (and an intercept term) using three priors:
+
+1. Uninformative Normal Priors: $\beta_j \sim \text{Normal}(0,100)$.
+
+2. Hierarchical Normal Priors: $\beta_j | \tau \sim \text{Normal}(0,\tau) $, where $\tau^2 \sim \text{InerseGamma}(0.01, 0.01)$.
+
+3. Bayesian LASSO: $\beta_j | \tau \sim \text{DE}(0,\tau)$, where $\tau^2 \sim \text{InverseGamma}(0.01,0.01)$. #Double exponential
+
+##Uninformative Normal Priors
+```{r}
+data {
+int<lower=0> N;
+vector[N] x;
+vector[N] y;
+}
+parameters {
+real alpha;
+real beta;
+real<lower=0> sigma;
+}
+model {
+y ~ normal(alpha + beta * x, sigma);
+}
+```
+
+
+##Hierarchial Normal Priors
+```{r}
+
+```
+
+##Bayesian LASSO
+```{r}
+
+```
+
+Notes:
+should get a beta for each of the 50 coloumns, an intercept term, a sigma term.
+Could give the sigma flat priors?
+QR reparameteriziation is more eficient. decomposing X matrix into orthogonal matrix Q and upper triangular matrix R (page 125 in manual). 
+
+
+
+
+
+
+
+
+
+
+
