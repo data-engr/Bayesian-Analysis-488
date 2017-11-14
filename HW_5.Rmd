@@ -37,9 +37,9 @@ Now fit a Bayesian linear regression model in Stan with precipitation as the res
 
 1. Uninformative Normal Priors: $\beta_j \sim \text{Normal}(0,100)$.
 
-2. Hierarchical Normal Priors: $\beta_j | \tau \sim \text{Normal}(0,\tau) $, where $\tau^2 \sim \text{InerseGamma}(0.01, 0.01)$.
+2. Hierarchical Normal Priors: $\beta_j | \tau \sim \text{Normal}(0,\tau) $, where $\tau^2 \sim \text{InerseGamma}(0.01, 0.01)$. tau^2 not same as tau
 
-3. Bayesian LASSO: $\beta_j | \tau \sim \text{DE}(0,\tau)$, where $\tau^2 \sim \text{InverseGamma}(0.01,0.01)$. #Double exponential
+3. Bayesian LASSO: $\beta_j | \tau \sim \text{DE}(0,\tau)$, where $\tau^2 \sim \text{InverseGamma}(0.01,0.01)$. tau^2 follows Double exponential pg 528
 
 ##Uninformative Normal Priors
 ```{r}
